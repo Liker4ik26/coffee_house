@@ -1,0 +1,9 @@
+{
+  "@@locale": "en",
+  "appTitle": "coffee house",
+  "@common": {
+    "------------": "-----------"
+  },
+  "currency": "rub",
+  "errorData": "Error data"
+}

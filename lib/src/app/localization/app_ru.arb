@@ -1,0 +1,9 @@
+{
+  "@@locale": "ru",
+  "appTitle": "coffee house",
+  "@common": {
+    "------------": "-----------"
+  },
+  "currency": "руб",
+  "errorData": "Ошибка данных"
+}
