@@ -3,6 +3,7 @@ import 'package:coffee_house/src/repo/products/repository.dart';
 import 'package:coffee_house/src/shared/api/types.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class MainController extends GetxController {
   late ScrollController scrollController = ScrollController();
@@ -12,10 +13,12 @@ class MainController extends GetxController {
   late final RxMap<String, int> selectedProduct = <String, int>{}.obs;
   final productsRepo = Get.find<ProductsRepository>();
   final products = RxV(<ProductsSectionModel>[]);
+  late final ItemPositionsListener itemPositionsListener;
+  late final ItemScrollController itemScrollController;
 
-  void changeTabIndex(int index) {
-    currentIndex.value = index;
-  }
+  // void changeTabIndex(int index) {
+  //   currentIndex.value = index;
+  // }
 
   @override
   void dispose() {
@@ -33,14 +36,22 @@ class MainController extends GetxController {
   Future<void> onInit() async {
     await load();
 
-    List.generate(
-      products.data.length,
-      (index) => globalKeyList.add(
-        GlobalKey(debugLabel: index.toString()),
-      ),
-    );
+    // List.generate(
+    //   products.data.length,
+    //   (index) => globalKeyList.add(
+    //     GlobalKey(debugLabel: index.toString()),
+    //   ),
+    // );
+    itemPositionsListener = ItemPositionsListener.create();
+    itemScrollController = ItemScrollController();
+    final itemPositionsListenable = itemPositionsListener.itemPositions;
+    itemPositionsListenable.addListener(() {
+      currentIndex.value = itemPositionsListenable.value.first.index;
+    });
+
     super.onInit();
   }
+
 
   Future<void> load() async {
     await Future.wait([

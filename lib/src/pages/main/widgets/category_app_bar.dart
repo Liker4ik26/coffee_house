@@ -1,7 +1,8 @@
 import 'package:coffee_house/src/pages/main/main_controller.dart';
+import 'package:coffee_house/src/pages/main/widgets/category_tab.dart';
 import 'package:coffee_house/src/shared/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_utils/src/extensions/widget_extensions.dart';
+import 'package:get/get.dart';
 
 class CategoryAppBar extends StatelessWidget {
   const CategoryAppBar({super.key, required this.controller});
@@ -10,29 +11,35 @@ class CategoryAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverAppBar(
-      pinned: true,
-      floating: true,
-      primary: true,
-      snap: true,
-      expandedHeight: 38,
-      collapsedHeight: 38,
-      toolbarHeight: 38,
-      automaticallyImplyLeading: false,
-      backgroundColor: context.color.background,
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(20),
-        child: Container(
-          color: context.color.background,
-          height: 38,
-          child: TabBar(
-            onTap: controller.changeTabIndex,
-            isScrollable: true,
-            tabs: controller.products.data
-                .map((item) => Tab(text: item.category).paddingAll(8))
-                .toList(),
-          ),
+    return Container(
+      color: context.color.background,
+      height: 36,
+      child: ListView.separated(
+        primary: false,
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemBuilder: (context, index) {
+          return Obx(
+            () => CategoryTab(
+              categoryIndex: index,
+              selectedCategoryIndex: controller.currentIndex.value,
+              category: controller.products.data[index].category,
+              onTap: () {
+                controller.currentIndex.value = index;
+                controller.itemScrollController.scrollTo(
+                  index: index,
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.decelerate,
+                );
+              },
+            ),
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) => const SizedBox(
+          width: 8,
         ),
+        itemCount: controller.products.data.length,
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:coffee_house/src/app/styles/dimensions.dart';
 import 'package:coffee_house/src/pages/main/widgets/operation_block.dart';
 import 'package:coffee_house/src/repo/products/model.dart';
 import 'package:coffee_house/src/shared/extensions/context_extensions.dart';
@@ -36,7 +37,7 @@ class ProductCardWidget extends StatelessWidget {
             height: 100,
             width: MediaQuery.of(context).size.width / 4,
             borderRadius: const SmoothBorderRadius.all(
-                SmoothRadius(cornerRadius: 16, cornerSmoothing: 1)),
+                SmoothRadius(cornerRadius: AppDimensions.small, cornerSmoothing: 1)),
             imageUrl: productModel.image,
           ),
           Text(

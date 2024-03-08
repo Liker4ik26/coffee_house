@@ -1,3 +1,4 @@
+import 'package:coffee_house/src/app/styles/dimensions.dart';
 import 'package:coffee_house/src/pages/main/widgets/operation_button.dart';
 import 'package:coffee_house/src/shared/extensions/context_extensions.dart';
 import 'package:figma_squircle/figma_squircle.dart';
@@ -31,7 +32,7 @@ class OperationBlock extends StatelessWidget {
           decoration: BoxDecoration(
             color: context.color.accent,
             borderRadius: const SmoothBorderRadius.all(
-              SmoothRadius(cornerRadius: 16, cornerSmoothing: 1),
+              SmoothRadius(cornerRadius: AppDimensions.small, cornerSmoothing: 1),
             ),
           ),
           child: Center(
