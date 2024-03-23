@@ -1,11 +1,12 @@
 import 'package:coffee_house/src/app/styles/dimensions.dart';
 import 'package:coffee_house/src/pages/main/widgets/operation_block.dart';
-import 'package:coffee_house/src/repo/products/model.dart';
 import 'package:coffee_house/src/shared/extensions/context_extensions.dart';
 import 'package:coffee_house/src/shared/widgets/card_image.dart';
 import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../data/models/products/product_model.dart';
 
 class ProductCardWidget extends StatelessWidget {
   const ProductCardWidget({
@@ -17,10 +18,10 @@ class ProductCardWidget extends StatelessWidget {
     required this.addedToCart,
   });
 
-  final ValueChanged<String> onClickMinus;
-  final ValueChanged<String> onClickPlus;
+  final ValueChanged<int> onClickMinus;
+  final ValueChanged<int> onClickPlus;
   final VoidCallback addedToCart;
-  final int? quantity;
+  final int quantity;
   final ProductModel productModel;
 
   @override
@@ -36,21 +37,22 @@ class ProductCardWidget extends StatelessWidget {
           CardImage(
             height: 100,
             width: MediaQuery.of(context).size.width / 4,
-            borderRadius: const SmoothBorderRadius.all(
-                SmoothRadius(cornerRadius: AppDimensions.small, cornerSmoothing: 1)),
-            imageUrl: productModel.image,
+            borderRadius: const SmoothBorderRadius.all(SmoothRadius(
+                cornerRadius: AppDimensions.small, cornerSmoothing: 1)),
+            imageUrl: productModel.imageUrl,
           ),
           Text(
-            productModel.name,
+            productModel.name!,
             maxLines: 1,
             style: context.text.robotoMedium16,
             overflow: TextOverflow.ellipsis,
           ).paddingSymmetric(vertical: 8),
-          quantity != null && quantity! != 0
+
+          quantity != 0
               ? OperationBlock(
-                  onClickMinus: () => onClickMinus(productModel.id),
-                  onClickPlus: () => onClickPlus(productModel.id),
-                  quantity: quantity!,
+                  onClickMinus: () => onClickMinus(productModel.id!),
+                  onClickPlus: () => onClickPlus(productModel.id!),
+                  quantity: quantity,
                 )
               : SizedBox(
                   height: 24,
@@ -70,7 +72,9 @@ class ProductCardWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '${productModel.cost.toInt()} ${context.tr.currency}',
+                          productModel.prices!
+                              .map((e) => formatPrice(e.value!, e.currency!))
+                              .join(' '),
                           style: context.text.robotoRegular14.copyWith(
                             color: context.color.secondary,
                           ),
@@ -83,4 +87,12 @@ class ProductCardWidget extends StatelessWidget {
       ).paddingSymmetric(vertical: 14, horizontal: 32),
     );
   }
+}
+
+String formatPrice(String value, String currency) {
+  if (currency == "RUB") {
+    double priceValue = double.tryParse(value) ?? 0;
+    return '${priceValue.toInt()} руб';
+  }
+  return '';
 }

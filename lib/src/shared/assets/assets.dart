@@ -2,6 +2,7 @@
 class Assets {
   Assets._();
 
+  static const String coffeeHouse = '.env';
   static const String iconsMinus = 'assets/icons/minus.svg';
   static const String iconsPlus = 'assets/icons/plus.svg';
   static const String imagesErrorImage = 'assets/images/error_image.png';

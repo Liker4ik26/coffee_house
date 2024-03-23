@@ -1,14 +1,26 @@
-import 'package:coffee_house/src/pages/main/main_controller.dart';
+import 'package:coffee_house/src/data/models/categories/category_model.dart';
 import 'package:coffee_house/src/pages/main/widgets/category_tab.dart';
 import 'package:coffee_house/src/shared/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-class CategoryAppBar extends StatelessWidget {
-  const CategoryAppBar({super.key, required this.controller});
+class CategoryAppBar extends StatefulWidget {
+  CategoryAppBar({
+    Key? key,
+    required this.categories,
+    required this.currentIndex,
+    required this.itemScrollController,
+  }) : super(key: key);
 
-  final MainController controller;
+  final List<CategoryModel> categories;
+  late int currentIndex;
+  late final ItemScrollController itemScrollController;
 
+  @override
+  _CategoryAppBarState createState() => _CategoryAppBarState();
+}
+
+class _CategoryAppBarState extends State<CategoryAppBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -20,26 +32,26 @@ class CategoryAppBar extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemBuilder: (context, index) {
-          return Obx(
-            () => CategoryTab(
-              categoryIndex: index,
-              selectedCategoryIndex: controller.currentIndex.value,
-              category: controller.products.data[index].category,
-              onTap: () {
-                controller.currentIndex.value = index;
-                controller.itemScrollController.scrollTo(
-                  index: index,
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.decelerate,
-                );
-              },
-            ),
+          return CategoryTab(
+            categoryIndex: index,
+            selectedCategoryIndex: widget.currentIndex,
+            category: widget.categories[index].slug!,
+            onTap: () {
+              setState(() {
+                widget.currentIndex = index;
+              });
+              widget.itemScrollController.scrollTo(
+                index: index,
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.decelerate,
+              );
+            },
           );
         },
         separatorBuilder: (BuildContext context, int index) => const SizedBox(
           width: 8,
         ),
-        itemCount: controller.products.data.length,
+        itemCount: widget.categories.length,
       ),
     );
   }
